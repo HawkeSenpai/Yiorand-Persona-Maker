@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Template Generator</title>
+    <style>
+        /* Basic styling for the form and output */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+        }
+        .template-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .template-input {
+            width: calc(100% - 22px);
+            padding: 11px;
+            margin-bottom: 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+            min-height: 40px;
+        }
+        textarea.template-input {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .template-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+            color: #333;
+        }
+        .template-header {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #1a73e8; /* Google Blue */
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        #generateButton {
+            background-color: #38761d;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+        }
+        #generateButton:hover {
+            background-color: #274e13;
+        }
+        #outputBox {
+            margin-top: 30px;
+            padding: 25px;
+            border: 2px solid #1a73e8;
+            background-color: #e6f0ff;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+            font-size: 0.95em;
+            border-radius: 8px;
+            color: #1c4587;
+            cursor: copy; /* Indicate it's copyable */
+            min-height: 100px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="template-container">
+    <h1>Character Template Generator</h1>
+
+    <div class="template-header">Identity</div>
+    <label class="template-label" for="charName">Name:</label>
+    <input type="text" id="charName" class="template-input" value="{{char}}">
+
+    <label class="template-label" for="gender">Gender:</label>
+    <input type="text" id="gender" class="template-input" placeholder="<Gender>">
+
+    <label class="template-label" for="age">Age:</label>
+    <input type="text" id="age" class="template-input" placeholder="<Age> (Note racial lifespan context)">
+
+    <label class="template-label" for="race">Race:</label>
+    <input type="text" id="race" class="template-input" placeholder="<Race> (Include sub-race if applicable)">
+
+    <label class="template-label" for="occupation">Occupation:</label>
+    <input type="text" id="occupation" class="template-input" placeholder="<Occupation>">
+
+    <label class="template-label" for="nation">Nation:</label>
+    <input type="text" id="nation" class="template-input" placeholder="<Where they're from and current location>">
+
+    <label class="template-label" for="motivation">Motivation:</label>
+    <textarea id="motivation" class="template-input" placeholder="<Character's core motivation/goal>"></textarea>
+
+    <div class="template-header">Appearance</div>
+    <label class="template-label" for="description">Physical Description:</label>
+    <textarea id="description" class="template-input" placeholder="<Concise physical description, including any racial features - scales, tails, horns, ears, etc.>" rows="3"></textarea>
+
+    <label class="template-label" for="scent">Scent:</label>
+    <input type="text" id="scent" class="template-input" placeholder="<What they smell like - consider racial traits>">
+
+    <label class="template-label" for="marks">Distinguishing Marks:</label>
+    <input type="text" id="marks" class="template-input" placeholder="<Scars, tattoos, magical marks, or unusual racial traits> (optional)">
+
+    <div class="template-header">Magic</div>
+    <label class="template-label" for="tier">Mastery Tier:</label>
+    <input type="text" id="tier" class="template-input" placeholder="<Novice / Adept / Master / Archmage / Magically Inept / Mana-Absent>">
+
+    <label class="template-label" for="schools">Preferred Schools:</label>
+    <input type="text" id="schools" class="template-input" placeholder="<Which schools they favour, if any>">
+
+    <label class="template-label" for="spells">Notable Spells:</label>
+    <textarea id="spells" class="template-input" placeholder="<Specific spells they've mastered or created>" rows="2"></textarea>
+
+    <label class="template-label" for="manaPool">Mana Pool:</label>
+    <input type="text" id="manaPool" class="template-input" placeholder="<Relative size - small/average/large for their race and training>">
+
+    <label class="template-label" for="castingStyle">Casting Style:</label>
+    <input type="text" id="castingStyle" class="template-input" placeholder="<Academic/Primal/Instinctive/Scientific/Survival - based on cultural background>">
+
+    <label class="template-label" for="limitations">Magical Limitations:</label>
+    <textarea id="limitations" class="template-input" placeholder="<Personal weaknesses, anti-magic resistance if applicable, dangerous gaps in knowledge>" rows="2"></textarea>
+
+    <div class="template-header">Culture</div>
+    <label class="template-label" for="religion">Religious Beliefs:</label>
+    <textarea id="religion" class="template-input" placeholder="<Which deity/deities they follow, if any - and how devoutly>" rows="2"></textarea>
+
+    <label class="template-label" for="values">Cultural Values:</label>
+    <textarea id="values" class="template-input" placeholder="<How their nation/tribe's values manifest in them>" rows="2"></textarea>
+
+    <label class="template-label" for="attitudes">Racial Attitudes:</label>
+    <textarea id="attitudes" class="template-input" placeholder="<Their views on other races - prejudices, openness, etc.>" rows="2"></textarea>
+
+    <label class="template-label" for="perspective">Regional Perspective:</label>
+    <textarea id="perspective" class="template-input" placeholder="<How growing up in their region shaped their worldview>" rows="2"></textarea>
+
+    <div class="template-header">Combat</div>
+    <label class="template-label" for="combatStyle">Combat Style:</label>
+    <input type="text" id="combatStyle" class="template-input" placeholder="<How they fight - magical, physical, hybrid>">
+
+    <label class="template-label" for="weapons">Weapons/Tools:</label>
+    <input type="text" id="weapons" class="template-input" placeholder="<Preferred equipment>">
+
+    <label class="template-label" for="strengths">Strengths:</label>
+    <textarea id="strengths" class="template-input" placeholder="<What they excel at, including racial advantages>" rows="2"></textarea>
+
+    <label class="template-label" for="weaknesses">Weaknesses:</label>
+    <textarea id="weaknesses" class="template-input" placeholder="<Combat limitations>" rows="2"></textarea>
+
+    <div class="template-header">Faction & Notes (Optional)</div>
+    <label class="template-label" for="faction">Faction Affiliations:</label>
+    <textarea id="faction" class="template-input" placeholder="<Any connection to: Arcane Assembly, Covenant of Scales, Golden Route Consortium, Eternal Court, Radiant Order, or other groups>" rows="2"></textarea>
+
+    <label class="template-label" for="notes">Notes/Secrets:</label>
+    <textarea id="notes" class="template-input" placeholder="<Anything that doesn't fit other sections, important plot hooks or secrets, future character development plans>" rows="2"></textarea>
+
+
+    <button id="generateButton">Generate Final Character Sheet</button>
+
+    <div id="outputBox">
+        Click the button above to generate your character sheet. Then, click here to copy the final text!
+    </div>
+
+</div>
+
+<script>
+    // The core function to build the final character template text
+    document.getElementById('generateButton').onclick = function() {
+        const outputBox = document.getElementById('outputBox');
+
+        // Get all values from the inputs (using placeholders as fallbacks for blank fields)
+        const getVal = (id, fallback) => document.getElementById(id).value.trim() || fallback;
+
+        const values = {
+            charName: getVal('charName', '{{char}}'),
+            gender: getVal('gender', '<Gender>'),
+            age: getVal('age', '<Age> (Note racial lifespan context)'),
+            race: getVal('race', '<Race> (Include sub-race if applicable, e.g., "Kitsune - 3 tails" or "Beastfolk - Feline")'),
+            occupation: getVal('occupation', '<Occupation>'),
+            nation: getVal('nation', '<Where they\'re from and current location>'),
+            motivation: getVal('motivation', '<Character\'s core motivation/goal>'),
+
+            description: getVal('description', '<Concise physical description, including any racial features - scales, tails, horns, ears, etc.>'),
+            scent: getVal('scent', '<What they smell like - consider racial traits>'),
+            marks: getVal('marks', '<Scars, tattoos, magical marks, or unusual racial traits> (optional, if any)'),
+
+            // The BACKSTORY section will remain as the fixed placeholder text
+            
+            tier: getVal('tier', '<Novice / Adept / Master / Archmage / Magically Inept / Mana-Absent>'),
+            schools: getVal('schools', '<Which schools they favour, if any>'),
+            spells: getVal('spells', '<Specific spells they\'ve mastered or created>'),
+            manaPool: getVal('manaPool', '<Relative size - small/average/large for their race and training>'),
+            castingStyle: getVal('castingStyle', '<Academic/Primal/Instinctive/Scientific/Survival - based on cultural background>'),
+            limitations: getVal('limitations', '<Personal weaknesses, anti-magic resistance if applicable, dangerous gaps in knowledge>'),
+
+            religion: getVal('religion', '<Which deity/deities they follow, if any - and how devoutly>'),
+            values: getVal('values', '<How their nation/tribe\'s values manifest in them>'),
+            attitudes: getVal('attitudes', '<Their views on other races - prejudices, openness, etc.>'),
+            perspective: getVal('perspective', '<How growing up in their region shaped their worldview>'),
+
+            combatStyle: getVal('combatStyle', '<How they fight - magical, physical, hybrid>'),
+            weapons: getVal('weapons', '<Preferred equipment>'),
+            strengths: getVal('strengths', '<What they excel at, including racial advantages>'),
+            weaknesses: getVal('weaknesses', '<Combat limitations>'),
+
+            faction: getVal('faction', '<Any connection to: Arcane Assembly, Covenant of Scales, Golden Route Consortium, Eternal Court, Radiant Order, or other groups>'),
+            notes: getVal('notes', '<Anything that doesn\'t fit other sections, important plot hooks or secrets, future character development plans>')
+        };
+
+        // Construct the final string using a template literal
+        // NOTE: I've left the multi-line placeholders (like BACKSTORY) exactly as you had them for the user to fill in later, which is cleaner for the generated output.
+        const generatedText = `Name: ${values.charName}
+Gender: ${values.gender}
+Age: ${values.age}
+Race: ${values.race}
+Occupation: ${values.occupation}
+Nation: ${values.nation}
+Motivation: ${values.motivation}
+
+APPEARANCE
+Physical Description: ${values.description}
+Scent: ${values.scent}
+Distinguishing Marks: ${values.marks}
+
+BACKSTORY (OPTIONAL)
+<Key chronological events that shaped them>
+<Crucial past relationships or incidents>
+<How their regional culture/racial background influenced their development>
+<Any interaction with major factions (Arcane Assembly, Golden Route Consortium, etc.)>
+<How their past informs their present behaviour/outlook>
+
+MAGIC
+Mastery Tier: ${values.tier}
+Preferred Schools: ${values.schools}
+Notable Spells: ${values.spells}
+Mana Pool: ${values.manaPool}
+Casting Style: ${values.castingStyle}
+Magical Limitations: ${values.limitations}
+
+CULTURE
+Religious Beliefs: ${values.religion}
+Cultural Values: ${values.values}
+Racial Attitudes: ${values.attitudes}
+Regional Perspective: ${values.perspective}
+
+COMBAT
+Combat Style: ${values.combatStyle}
+Weapons/Tools: ${values.weapons}
+Strengths: ${values.strengths}
+Weaknesses: ${values.weaknesses}
+
+FACTION AFFILIATIONS (OPTIONAL, IF ANY)
+${values.faction}
+
+NOTES (OPTIONAL)
+${values.notes}`;
+
+        // Update the output box
+        outputBox.innerText = generatedText;
+        outputBox.style.display = 'block'; // Show the box
+    };
+
+    // Simple function to copy the text on click
+    document.getElementById('outputBox').onclick = function() {
+        const textToCopy = this.innerText;
+        if (!textToCopy || textToCopy.includes("Click the button above")) return;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // Provide visual feedback
+            const originalText = this.innerText;
+            this.innerText = "COPIED TO CLIPBOARD! Click again to see the sheet.";
+            
+            // Revert text after a short time
+            setTimeout(() => { this.innerText = originalText; }, 1500);
+
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            alert("Copy failed. Please manually select the text in the box and copy.");
+        });
+    };
+</script>
+
+</body>
+</html>
