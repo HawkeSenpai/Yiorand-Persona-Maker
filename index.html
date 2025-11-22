@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yiorand Character Codex Generator</title>
+    <title>Yiorand Persona Creator</title>
+    <!-- Use Google Fonts for a fantasy feel -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/ico" href="yiorand-icon.ico">
+    <!-- Replace 'yiorand-icon.ico' with the actual path to your uploaded icon -->
+    <link rel="icon" type="image/ico" href="yiorand-icon.ico"> 
     <style>
         /* BASE STYLES - High Fantasy Theme */
         :root {
@@ -21,8 +23,6 @@
             background-color: var(--color-dark-blue);
             color: var(--color-text);
             padding: 20px;
-            /* Optional: Add a subtle texture or pattern for a richer feel */
-            /* background-image: url('data:image/svg+xml;utf8,...'); */
         }
         .template-container {
             max-width: 900px;
@@ -56,6 +56,16 @@
             min-height: 45px;
             transition: border-color 0.3s;
         }
+        /* Style for the select dropdown */
+        select.template-input {
+            appearance: none; /* Remove default arrow in some browsers */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c39f5f%22%20d%3D%22M287%20197.4l-118-118c-4.7-4.7-12.3-4.7-17%200l-118%20118c-4.7%204.7-4.7%2012.3%200%2017s12.3%204.7%2017%200l109.5-109.5c4.7-4.7%2012.3-4.7%2017%200l109.5%20109.5c4.7%204.7%2012.3%204.7%2017%200s4.7-12.3%200-17z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px;
+            padding-right: 30px;
+        }
+
         .template-input:focus {
             border-color: var(--color-gold);
             outline: none;
@@ -145,111 +155,194 @@
 <body>
 
 <div class="template-container">
-    <h1>Yiorand Character Codex Generator</h1>
+    <h1>Yiorand Persona Creator</h1>
+
+    <!-- AUDIO PLAYER -->
+    <div style="text-align: center; margin-bottom: 10px;">
+        <audio controls loop>
+            <!-- Change the source path to your uploaded audio file -->
+            <source src="yiorand-theme.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
 
     <div class="template-header">Identity & Origin</div>
     
     <label class="template-label" for="charName">Name:</label>
     <input type="text" id="charName" class="template-input" placeholder="<Name>">
+    
+    <!-- NEW FIELD: Alias -->
+    <label class="template-label" for="alias">Alias: <span class="optional">(Optional)</span></label>
+    <input type="text" id="alias" class="template-input" placeholder="<Known by / Nickname>">
 
     <label class="template-label" for="gender">Gender:</label>
     <input type="text" id="gender" class="template-input" placeholder="<Gender>">
 
-    <label class="template-label" for="age">Age: <span class="optional">(Optional)</span></label>
+    <!-- REMOVED OPTIONAL: age -->
+    <label class="template-label" for="age">Age:</label>
     <input type="text" id="age" class="template-input" placeholder="<Age> (Note racial lifespan context)">
 
-    <label class="template-label" for="race">Race: <a href="https://janitorai.com/scripts/0b8a2b89-8b31-46fd-a224-0c17961a7dab" target="_blank">(View Racial Index)</a></label>
-    <input type="text" id="race" class="template-input" placeholder="<Race> (Kitsune - 3 tails, Beastfolk - Feline, etc.)">
+    <!-- **RACE DROPDOWN (SELECT)** -->
+    <label class="template-label" for="race">Race: <a href="https://example.com/yiorand-races" target="_blank">(View Racial Index)</a></label>
+    <select id="race" class="template-input">
+        <option value="">-- Select Race --</option>
+        <option value="Human">Human</option>
+        <option value="Elf">Elf</option>
+        <option value="Drow">Drow</option>
+        <option value="Dark Elf">Dark Elf</option>
+        <option value="Dwarf">Dwarf</option>
+        <option value="Gnome">Gnome</option>
+        <option value="Halfling">Halfling</option>
+        <option value="Demi-Human (Beastfolk)">Demi-Human (Beastfolk)</option>
+        <option value="Kitsune">Kitsune</option>
+        <option value="Orc">Orc</option>
+        <option value="Dragonborn">Dragonborn</option>
+        <option value="Tiefling">Tiefling</option>
+        <option value="Aasimar">Aasimar</option>
+        <option value="Vampire">Vampire</option>
+        <option value="Goliath">Goliath</option>
+        <option value="Centaur">Centaur</option>
+        <option value="Minotaur">Minotaur</option>
+        <option value="Goblin">Goblin</option>
+    </select>
+    
+    <!-- **DEITY DROPDOWN (SELECT)** -->
+    <label class="template-label" for="deity">Primary Deity:</label>
+    <select id="deity" class="template-input">
+        <option value="">-- Select Deity --</option>
+        <option value="Atheist">Atheist</option>
+        <option value="Vahnir, the Great Father">Vahnir, the Great Father</option>
+        <option value="Lasmad, the Dragon God">Lasmad, the Dragon God</option>
+        <option value="Osharia, the Shadow Dragon">Osharia, the Shadow Dragon</option>
+        <option value="Mortanis, the Final Judge">Mortanis, the Final Judge</option>
+        <option value="Aethyra, the Arcane Mother">Aethyra, the Arcane Mother</option>
+        <option value="Thalros, the War God">Thalros, the War God</option>
+        <option value="Valdren, the Lawkeeper">Valdren, the Lawkeeper</option>
+        <option value="Zelvani, the Golden Tongue">Zelvani, the Golden Tongue</option>
+        <option value="Velindra, the Heartbinder">Velindra, the Heartbinder</option>
+        <option value="Mareus, Lord of Tides">Mareus, Lord of Tides</option>
+        <option value="Demara, the Harvest Mother">Demara, the Harvest Mother</option>
+        <option value="The Moon Spirits">The Moon Spirits</option>
+        <option value="The First Dragon">The First Dragon</option>
+    </select>
 
     <label class="template-label" for="occupation">Occupation:</label>
     <input type="text" id="occupation" class="template-input" placeholder="<Occupation>">
+    
+    <!-- NEW FIELD: Title -->
+    <label class="template-label" for="title">Title: <span class="optional">(Optional)</span></label>
+    <input type="text" id="title" class="template-input" placeholder="<E.g., Duke, Master of Whispers, The Black Hand>">
 
+    <!-- **NATION DROPDOWN (SELECT)** -->
     <label class="template-label" for="nation">Nation:</label>
-    <input type="text" id="nation" class="template-input" placeholder="<Where they're from and current location>">
+    <select id="nation" class="template-input">
+        <option value="">-- Select Nation/Region --</option>
+        <option value="The Valendorn Empire">The Valendorn Empire</option>
+        <option value="Xuihan">Xuihan</option>
+        <option value="Aetherhaven">Aetherhaven</option>
+        <option value="The Varanthia Empire - The Beastfolk Empire">The Varanthia Empire - The Beastfolk Empire</option>
+        <option value="Faeloria">Faeloria</option>
+        <option value="Xalithar">Xalithar</option>
+        <option value="Thralgar">Thralgar</option>
+        <option value="Eldrasil">Eldrasil</option>
+        <option value="The Krilarene Dynasty">The Krilarene Dynasty</option>
+        <option value="Dawnspire Kingdom - The Aasimar Realm">Dawnspire Kingdom - The Aasimar Realm</option>
+        <option value="Slyvermire">Slyvermire</option>
+        <option value="The Celdraeth Dynasty">The Celdraeth Dynasty</option>
+        <option value="The Republic of Xeagon">The Republic of Xeagon</option>
+        <option value="Snaunia">Snaunia</option>
+        <option value="Nusmal">Nusmal</option>
+        <option value="Umbrazar">Umbrazar</option>
+        <option value="Solaceon">Solaceon</option>
+        <option value="Nimblewood">Nimblewood</option>
+        <option value="The Republic of Tribel">The Republic of Tribel</option>
+        <option value="Brambledell">Brambledell</option>
+        <option value="Orc Tribes of Sascia">Orc Tribes of Sascia</option>
+        <option value="Human Tribes of Sascia">Human Tribes of Sascia</option>
+        <option value="Goblin Tribes of Sascia">Goblin Tribes of Sascia</option>
+        <option value="Goliath Tribes of Sascia">Goliath Tribes of Sascia</option>
+        <option value="Dragonborn Tribes of Sascia">Dragonborn Tribes of Sascia</option>
+        <option value="Centaur Tribe of Sascia">Centaur Tribe of Sascia</option>
+        <option value="Minotaur Tribe of Sascia">Minotaur Tribe of Sascia</option>
+    </select>
 
-    <label class="template-label" for="motivation">Motivation:</label>
-    <textarea id="motivation" class="template-input" placeholder="<Character's core motivation/goal>" rows="2"></textarea>
-
-    <div class="template-header">Appearance</div>
+    <!-- MOVED: Physical Description from Appearance to Identity -->
     <label class="template-label" for="description">Physical Description:</label>
-    <textarea id="description" class="template-input" placeholder="<Concise physical description, including any racial features>" rows="3"></textarea>
+    <textarea id="description" class="template-input" placeholder="<Concise physical description, including any racial features - scales, tails, horns, ears, etc.>" rows="3"></textarea>
 
-    <label class="template-label" for="scent">Scent: <span class="optional">(Optional)</span></label>
-    <input type="text" id="scent" class="template-input" placeholder="<What they smell like - consider racial traits>">
 
-    <label class="template-label" for="marks">Distinguishing Marks: <span class="optional">(Optional)</span></label>
-    <input type="text" id="marks" class="template-input" placeholder="<Scars, tattoos, magical marks, or unusual racial traits>">
+    <div class="template-header">Combat & Magic</div>
+    
+    <!-- REMOVED OPTIONAL: combatStyle -->
+    <label class="template-label" for="combatStyle">Combat Style:</label>
+    <input type="text" id="combatStyle" class="template-input" placeholder="<Weapon/magic approach>">
 
-    <div class="template-header">Magic & Arcana</div>
-    <label class="template-label" for="tier">Mastery Tier: <span class="optional">(Optional)</span></label>
-    <input type="text" id="tier" class="template-input" placeholder="<Novice / Adept / Master / Archmage / Magically Inept / Mana-Absent>">
-
-    <label class="template-label" for="schools">Preferred Schools: <span class="optional">(Optional)</span></label>
-    <input type="text" id="schools" class="template-input" placeholder="<Which schools they favour, if any>">
-
-    <label class="template-label" for="spells">Notable Spells: <span class="optional">(Optional)</span></label>
-    <textarea id="spells" class="template-input" placeholder="<Specific spells they've mastered or created>" rows="2"></textarea>
-
-    <label class="template-label" for="manaPool">Mana Pool: <span class="optional">(Optional)</span></label>
-    <input type="text" id="manaPool" class="template-input" placeholder="<Relative size - small/average/large for their race and training>">
-
-    <label class="template-label" for="castingStyle">Casting Style: <span class="optional">(Optional)</span></label>
-    <input type="text" id="castingStyle" class="template-input" placeholder="<Academic/Primal/Instinctive/Scientific/Survival - based on cultural background>">
-
-    <label class="template-label" for="limitations">Magical Limitations: <span class="optional">(Optional)</span></label>
-    <textarea id="limitations" class="template-input" placeholder="<Personal weaknesses, anti-magic resistance if applicable, dangerous gaps in knowledge>" rows="2"></textarea>
-
-    <div class="template-header">Culture & Beliefs</div>
-    <label class="template-label" for="religion">Religious Beliefs: <span class="optional">(Optional)</span></label>
-    <textarea id="religion" class="template-input" placeholder="<Which deity/deities they follow, if any - and how devoutly>" rows="2"></textarea>
-
-    <label class="template-label" for="values">Cultural Values:</label>
-    <textarea id="values" class="template-input" placeholder="<How their nation/tribe's values manifest in them>" rows="2"></textarea>
-
-    <label class="template-label" for="attitudes">Racial Attitudes:</label>
-    <textarea id="attitudes" class="template-input" placeholder="<Their views on other races - prejudices, openness, etc.>" rows="2"></textarea>
-
-    <label class="template-label" for="perspective">Regional Perspective:</label>
-    <textarea id="perspective" class="template-input" placeholder="<How growing up in their region shaped their worldview>" rows="2"></textarea>
-
-    <div class="template-header">Combat</div>
-    <label class="template-label" for="combatStyle">Combat Style: <span class="optional">(Optional)</span></label>
-    <input type="text" id="combatStyle" class="template-input" placeholder="<How they fight - magical, physical, hybrid>">
-
-    <label class="template-label" for="weapons">Weapons/Tools: <span class="optional">(Optional)</span></label>
-    <input type="text" id="weapons" class="template-input" placeholder="<Preferred equipment>">
-
-    <label class="template-label" for="strengths">Strengths:</label>
-    <textarea id="strengths" class="template-input" placeholder="<What they excel at, including racial advantages>" rows="2"></textarea>
+    <label class="template-label" for="strengths">Strengths: <span class="optional">(Optional)</span></label>
+    <textarea id="strengths" class="template-input" placeholder="<3-5 keywords of combat/magic strengths>" rows="2"></textarea>
 
     <label class="template-label" for="weaknesses">Weaknesses: <span class="optional">(Optional)</span></label>
-    <textarea id="weaknesses" class="template-input" placeholder="<Combat limitations>" rows="2"></textarea>
+    <textarea id="weaknesses" class="template-input" placeholder="<3-5 keywords of combat/magic weaknesses>" rows="2"></textarea>
 
-    <div class="template-header">Optional Lore Hooks</div>
+    <!-- **ARDOUR CONNECTION DROPDOWN (SELECT)** -->
+    <label class="template-label" for="ardourConnection">Ardour Connection:</label>
+    <select id="ardourConnection" class="template-input">
+        <option value="">-- Select Ardour Level --</option>
+        <option value="Novice">Novice</option>
+        <option value="Adept">Adept</option>
+        <option value="Master">Master</option>
+        <option value="Archmage">Archmage</option>
+    </select>
+
+    <label class="template-label" for="knownPrinciples">Known Principles: </label>
+    <textarea id="knownPrinciples" class="template-input" placeholder="<List of known magic principles with mastery level>" rows="2"></textarea>
+
+    <!-- **CASTING STYLE DROPDOWN (SELECT)** -->
+    <label class="template-label" for="castingStyle">Casting Style:</label>
+    <select id="castingStyle" class="template-input">
+        <option value="">-- Select Casting Style --</option>
+        <option value="Academic">Academic</option>
+        <option value="Primal">Primal</option>
+        <option value="Instinctive">Instinctive</option>
+        <option value="Survival">Survival</option>
+        <option value="Scientific">Scientific</option>
+    </select>
+
+    <!-- **STRAIN TOLERANCE DROPDOWN (SELECT)** -->
+    <label class="template-label" for="strainTolerance">Strain Tolerance:</label>
+    <select id="strainTolerance" class="template-input">
+        <option value="">-- Select Strain Tolerance --</option>
+        <option value="Low">Low</option>
+        <option value="Moderate">Moderate</option>
+        <option value="High">High</option>
+    </select>
+
+    <label class="template-label" for="limitations">Limitations: <span class="optional">(Optional)</span></label>
+    <textarea id="limitations" class="template-input" placeholder="<Racial or personal restrictions>" rows="2"></textarea>
+
+
+    <div class="template-header">Backstory</div>
+    <!-- TYPO FIX: Backstory (Optional) -->
+    <label class="template-label" for="backstory">Backstory: <span class="optional">(Optional)</span></label>
+    <textarea id="backstory" class="template-input" rows="4" placeholder="<Key chronological events, crucial past relationships, how culture influenced them, etc. (Keep this section for your own detailed notes)>"></textarea>
+
     <label class="template-label" for="faction">Faction Affiliations: <span class="optional">(Optional)</span></label>
-    <textarea id="faction" class="template-input" placeholder="<Any connection to: Arcane Assembly, Golden Route Consortium, etc.>" rows="2"></textarea>
+    <textarea id="faction" class="template-input" placeholder="<Any connection to major groups: Arcane Assembly, Covenant of Scales, etc.>" rows="2"></textarea>
 
     <label class="template-label" for="notes">Notes/Secrets: <span class="optional">(Optional)</span></label>
     <textarea id="notes" class="template-input" placeholder="<Anything that doesn't fit other sections, important plot hooks or secrets>" rows="2"></textarea>
 
 
-    <button id="generateButton">Seal the Codex & Generate Sheet</button>
+    <button id="generateButton">Seal the Codex</button>
 
+    <!-- OUTPUT BOX - Click to Copy -->
     <div id="outputBox">
-        Click the button above to generate your character sheet. Then, click here to copy the final text!
+        Click the button above to generate your persona sheet. Then, click here to copy the final text!
     </div>
-    <div style="text-align: center; margin-bottom: 10px;">
-    <p style="color: #ccc; font-size: 0.9em;">Ambient Theme (Optional)</p>
-    <audio controls loop>
-        <source src="yiorand.org.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-</div>
 </div>
 
 <script>
     // Helper function to get value, returns an empty string if blank
-    const getVal = (id) => document.getElementById(id).value.trim();
+    const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : '';
     
     // Core template line builder
     const buildLine = (label, value) => {
@@ -263,92 +356,91 @@
     document.getElementById('generateButton').onclick = function() {
         const outputBox = document.getElementById('outputBox');
 
-        // Fetch all values
+        // Fetch all values based on new structure
         const values = {
             charName: getVal('charName'),
+            alias: getVal('alias'), // NEW
             gender: getVal('gender'),
             age: getVal('age'),
-            race: getVal('race'),
+            race: getVal('race'), // NOW FROM SELECT
+            deity: getVal('deity'), // NOW FROM SELECT
             occupation: getVal('occupation'),
-            nation: getVal('nation'),
-            motivation: getVal('motivation'),
+            title: getVal('title'), // NEW
+            nation: getVal('nation'), // NOW FROM SELECT
+            description: getVal('description'), 
 
-            description: getVal('description'),
-            scent: getVal('scent'),
-            marks: getVal('marks'),
-            
-            tier: getVal('tier'),
-            schools: getVal('schools'),
-            spells: getVal('spells'),
-            manaPool: getVal('manaPool'),
-            castingStyle: getVal('castingStyle'),
-            limitations: getVal('limitations'),
-
-            religion: getVal('religion'),
-            values: getVal('values'),
-            attitudes: getVal('attitudes'),
-            perspective: getVal('perspective'),
-
-            combatStyle: getVal('combatStyle'),
-            weapons: getVal('weapons'),
+            // COMBAT & MAGIC
+            combatStyle: getVal('combatStyle'), 
             strengths: getVal('strengths'),
             weaknesses: getVal('weaknesses'),
-
+            ardourConnection: getVal('ardourConnection'), // NOW FROM SELECT
+            knownPrinciples: getVal('knownPrinciples'),
+            castingStyle: getVal('castingStyle'), // NOW FROM SELECT
+            strainTolerance: getVal('strainTolerance'), // NOW FROM SELECT
+            limitations: getVal('limitations'),
+            
+            // LORE HOOKS
+            backstory: getVal('backstory'),
             faction: getVal('faction'),
             notes: getVal('notes')
         };
         
         // --- TEMPLATE CONSTRUCTION ---
-        // We use the buildLine function for every single item.
-        // If the value is blank, the line will be an empty string and skip the output.
-        
         let generatedText = '';
         
-        // Identity Section (Required fields will use placeholders if blank, Optional fields skip)
+        // --- IDENTITY & ORIGIN ---
         generatedText += buildLine("Name", values.charName || "{{char}}");
+        generatedText += buildLine("Alias", values.alias); // NEW (Optional)
         generatedText += buildLine("Gender", values.gender || "<Gender>");
-        generatedText += buildLine("Age", values.age);
-        generatedText += buildLine("Race", values.race || "<Race>");
+        generatedText += buildLine("Age", values.age || "<Age> (Note racial lifespan context)");
+        // Race logic: If "-- Select Race --" is picked (value=""), use placeholder
+        generatedText += buildLine("Race", values.race || "<Race>"); 
+        // Deity logic: If "-- Select Deity --" is picked (value=""), use placeholder
+        generatedText += buildLine("Primary Deity", values.deity || "<Which deity/pantheon they follow, if any>"); 
         generatedText += buildLine("Occupation", values.occupation || "<Occupation>");
-        generatedText += buildLine("Nation", values.nation);
-        generatedText += buildLine("Motivation", values.motivation || "<Character's core motivation/goal>");
+        generatedText += buildLine("Title", values.title); // NEW (Optional)
+        // Nation logic: If "-- Select Nation/Region --" is picked (value=""), use placeholder
+        generatedText += buildLine("Nation", values.nation || "<Where they're from and current location>");
         
         generatedText += "\nAPPEARANCE\n";
         generatedText += buildLine("Physical Description", values.description || "<Concise physical description>");
-        generatedText += buildLine("Scent", values.scent);
-        generatedText += buildLine("Distinguishing Marks", values.marks);
 
-        // Backstory placeholder remains fixed
-        generatedText += "\nBACKSTORY (OPTIONAL)\n";
-        generatedText += "<Key chronological events that shaped them>\n<Crucial past relationships or incidents>\n<How their past informs their present behaviour/outlook>\n";
+        // --- BACKSTORY ---
+        if (values.backstory) {
+            generatedText += "\nBACKSTORY (OPTIONAL)\n";
+            generatedText += values.backstory + "\n";
+        } else {
+            // Include placeholders if empty to encourage completion
+            generatedText += "\nBACKSTORY (OPTIONAL)\n";
+            generatedText += "<Key chronological events that shaped them>\n<Crucial past relationships or incidents>\n<How their past informs their present behaviour/outlook>\n";
+        }
+        
+        // --- COMBAT & MAGIC (Unified Section) ---
+        generatedText += "\nCOMBAT & MAGIC\n";
+        generatedText += buildLine("Combat Style", values.combatStyle || "<Weapon/magic approach>");
+        generatedText += buildLine("Strengths", values.strengths || "<3-5 keywords>");
+        generatedText += buildLine("Weaknesses", values.weaknesses || "<3-5 keywords>");
+        // Ardour logic: If "-- Select Ardour Level --" is picked (value=""), use placeholder
+        generatedText += buildLine("Ardour Connection", values.ardourConnection || "<Level of Ardour Connection>");
+        generatedText += buildLine("Known Principles", values.knownPrinciples);
+        // Casting logic: If "-- Select Casting Style --" is picked (value=""), use placeholder
+        generatedText += buildLine("Casting Style", values.castingStyle || "<How they manifest magic>");
+        // Strain logic: If "-- Select Strain Tolerance --" is picked (value=""), use placeholder
+        generatedText += buildLine("Strain Tolerance", values.strainTolerance || "<Low/Moderate/High>");
+        generatedText += buildLine("Limitations", values.limitations);
 
-        generatedText += "\nMAGIC\n";
-        generatedText += buildLine("Mastery Tier", values.tier);
-        generatedText += buildLine("Preferred Schools", values.schools);
-        generatedText += buildLine("Notable Spells", values.spells);
-        generatedText += buildLine("Mana Pool", values.manaPool);
-        generatedText += buildLine("Casting Style", values.castingStyle);
-        generatedText += buildLine("Magical Limitations", values.limitations);
+        // --- FACTION & NOTES ---
+        if (values.faction) {
+            generatedText += "\nFACTION AFFILIATIONS (OPTIONAL)\n";
+            generatedText += buildLine("Affiliations", values.faction);
+        }
 
-        generatedText += "\nCULTURE\n";
-        generatedText += buildLine("Religious Beliefs", values.religion);
-        generatedText += buildLine("Cultural Values", values.values || "<How their values manifest in them>");
-        generatedText += buildLine("Racial Attitudes", values.attitudes || "<Their views on other races>");
-        generatedText += buildLine("Regional Perspective", values.perspective || "<How their region shaped their worldview>");
+        if (values.notes) {
+            generatedText += "\nNOTES (OPTIONAL)\n";
+            generatedText += buildLine("Details", values.notes);
+        }
 
-        generatedText += "\nCOMBAT\n";
-        generatedText += buildLine("Combat Style", values.combatStyle);
-        generatedText += buildLine("Weapons/Tools", values.weapons);
-        generatedText += buildLine("Strengths", values.strengths || "<What they excel at>");
-        generatedText += buildLine("Weaknesses", values.weaknesses);
-
-        generatedText += "\nFACTION AFFILIATIONS (OPTIONAL, IF ANY)\n";
-        generatedText += buildLine("Affiliations", values.faction);
-
-        generatedText += "\nNOTES (OPTIONAL)\n";
-        generatedText += buildLine("Details", values.notes);
-
-        // Remove double newlines if they resulted from many skipped optional fields
+        // Clean up empty lines and trim whitespace
         generatedText = generatedText.replace(/\n\n+/g, '\n\n').trim();
 
         // Update the output box
@@ -374,6 +466,3 @@
 
 </body>
 </html>
-
-
-
