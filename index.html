@@ -70,6 +70,12 @@
             border-color: var(--color-gold);
             outline: none;
         }
+        /* Style for the select dropdown when a required value is missing */
+        .template-input:required:invalid {
+            border-color: #cc4d4d; /* Red border for missing required field */
+            box-shadow: 0 0 5px rgba(204, 77, 77, 0.5);
+        }
+
         textarea.template-input {
             min-height: 100px;
             resize: vertical;
@@ -113,25 +119,51 @@
             text-decoration: underline;
         }
 
-        /* BUTTON */
-        #generateButton {
+        /* BUTTONS */
+        #generateButton, #musicButton {
             background-color: var(--color-button);
             color: var(--color-text);
-            padding: 18px 30px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.3em;
             font-weight: bold;
             transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        #generateButton {
+            padding: 18px 30px;
+            font-size: 1.3em;
             display: block;
             width: 100%;
             margin-top: 40px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        /* Custom Music Button Styling */
+        #musicButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #253341; /* Dark background */
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #musicButton:hover {
+            background-color: #2f4052;
+            transform: translateY(-1px);
         }
         #generateButton:hover {
             background-color: var(--color-button-hover);
             transform: translateY(-2px);
+        }
+
+        #errorMessage {
+            color: #cc4d4d;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
         }
         
         /* OUTPUT BOX */
@@ -150,6 +182,10 @@
             display: none;
             box-shadow: 0 0 10px rgba(195, 159, 95, 0.5); /* Output glow */
         }
+        /* CSS to ensure hidden field doesn't take space */
+        .hidden-field {
+            display: none; 
+        }
     </style>
 </head>
 <body>
@@ -157,34 +193,35 @@
 <div class="template-container">
     <h1>Yiorand Persona Creator</h1>
 
-    <!-- AUDIO PLAYER -->
-    <div style="text-align: center; margin-bottom: 10px;">
-        <audio controls loop>
+    <!-- CUSTOM AUDIO PLAYER -->
+    <div style="text-align: center;">
+        <audio id="bgMusic" loop>
             <!-- Change the source path to your uploaded audio file -->
-            <source src="yiorand-theme.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
+            <source src="yiorand.rog.mp3" type="audio/mpeg">
         </audio>
+        <button id="musicButton" onclick="toggleMusic()">
+            <span>▶ Play Ambient Theme</span>
+        </button>
     </div>
 
     <div class="template-header">Identity & Origin</div>
     
     <label class="template-label" for="charName">Name:</label>
-    <input type="text" id="charName" class="template-input" placeholder="<Name>">
+    <input type="text" id="charName" class="template-input" placeholder="<Name>" required>
     
-    <!-- NEW FIELD: Alias -->
     <label class="template-label" for="alias">Alias: <span class="optional">(Optional)</span></label>
     <input type="text" id="alias" class="template-input" placeholder="<Known by / Nickname>">
 
     <label class="template-label" for="gender">Gender:</label>
-    <input type="text" id="gender" class="template-input" placeholder="<Gender>">
+    <input type="text" id="gender" class="template-input" placeholder="<Gender>" required>
 
-    <!-- REMOVED OPTIONAL: age -->
-    <label class="template-label" for="age">Age:</label>
+    <!-- MADE OPTIONAL: age -->
+    <label class="template-label" for="age">Age: <span class="optional">(Optional)</span></label>
     <input type="text" id="age" class="template-input" placeholder="<Age> (Note racial lifespan context)">
 
-    <!-- **RACE DROPDOWN (SELECT)** -->
-    <label class="template-label" for="race">Race: <a href="https://example.com/yiorand-races" target="_blank">(View Racial Index)</a></label>
-    <select id="race" class="template-input">
+    <!-- **RACE DROPDOWN (SELECT) - PRIMARY FIELD** -->
+    <label class="template-label" for="race">Race: <a href="https://janitorai.com/scripts/0b8a2b89-8b31-46fd-a224-0c17961a7dab" target="_blank">(View Racial Index)</a></label>
+    <select id="race" class="template-input" required>
         <option value="">-- Select Race --</option>
         <option value="Human">Human</option>
         <option value="Elf">Elf</option>
@@ -193,7 +230,7 @@
         <option value="Dwarf">Dwarf</option>
         <option value="Gnome">Gnome</option>
         <option value="Halfling">Halfling</option>
-        <option value="Demi-Human (Beastfolk)">Demi-Human (Beastfolk)</option>
+        <option value="Demi-Human">Demi-Human (Beastfolk)</option>
         <option value="Kitsune">Kitsune</option>
         <option value="Orc">Orc</option>
         <option value="Dragonborn">Dragonborn</option>
@@ -206,9 +243,15 @@
         <option value="Goblin">Goblin</option>
     </select>
     
+    <!-- **CONDITIONAL SUB-RACE INPUT** -->
+    <div id="subRaceContainer" class="hidden-field">
+        <label class="template-label" for="subRace">Sub-Race / Heritage:</label>
+        <input type="text" id="subRace" class="template-input" placeholder="e.g., Lion, Wolf, or Orc Vampire" data-parent-race="">
+    </div>
+
     <!-- **DEITY DROPDOWN (SELECT)** -->
-    <label class="template-label" for="deity">Primary Deity:</label>
-    <select id="deity" class="template-input">
+    <label class="template-label" for="deity">Primary Deity: <a href="https://janitorai.com/scripts/be1b2039-17b2-4513-b648-58f9228676df" target="_blank">(View Pantheon)</a></label>
+    <select id="deity" class="template-input" required>
         <option value="">-- Select Deity --</option>
         <option value="Atheist">Atheist</option>
         <option value="Vahnir, the Great Father">Vahnir, the Great Father</option>
@@ -227,15 +270,14 @@
     </select>
 
     <label class="template-label" for="occupation">Occupation:</label>
-    <input type="text" id="occupation" class="template-input" placeholder="<Occupation>">
+    <input type="text" id="occupation" class="template-input" placeholder="<Occupation>" required>
     
-    <!-- NEW FIELD: Title -->
     <label class="template-label" for="title">Title: <span class="optional">(Optional)</span></label>
     <input type="text" id="title" class="template-input" placeholder="<E.g., Duke, Master of Whispers, The Black Hand>">
 
     <!-- **NATION DROPDOWN (SELECT)** -->
-    <label class="template-label" for="nation">Nation:</label>
-    <select id="nation" class="template-input">
+    <label class="template-label" for="nation">Nation: <a href="https://janitorai.com/scripts/936c3026-7959-4e2a-87af-c98bb9707301" target="_blank">(View Nations)</a></label>
+    <select id="nation" class="template-input" required>
         <option value="">-- Select Nation/Region --</option>
         <option value="The Valendorn Empire">The Valendorn Empire</option>
         <option value="Xuihan">Xuihan</option>
@@ -266,66 +308,70 @@
         <option value="Minotaur Tribe of Sascia">Minotaur Tribe of Sascia</option>
     </select>
 
-    <!-- MOVED: Physical Description from Appearance to Identity -->
     <label class="template-label" for="description">Physical Description:</label>
-    <textarea id="description" class="template-input" placeholder="<Concise physical description, including any racial features - scales, tails, horns, ears, etc.>" rows="3"></textarea>
+    <textarea id="description" class="template-input" placeholder="<Concise physical description, including any racial features - scales, tails, horns, ears, etc.>" rows="3" required></textarea>
 
 
-    <div class="template-header">Combat & Magic</div>
+    <div class="template-header">Combat & Magic <a style="font-size: 0.5em; margin-left: 10px;" href="https://janitorai.com/scripts/e830d601-0767-41f7-b869-fd0a6e894dca" target="_blank">(View Magic System)</a></div>
     
-    <!-- REMOVED OPTIONAL: combatStyle -->
     <label class="template-label" for="combatStyle">Combat Style:</label>
-    <input type="text" id="combatStyle" class="template-input" placeholder="<Weapon/magic approach>">
+    <input type="text" id="combatStyle" class="template-input" placeholder="<Weapon/magic approach>" required>
 
+    <!-- MADE OPTIONAL: Strengths -->
     <label class="template-label" for="strengths">Strengths: <span class="optional">(Optional)</span></label>
     <textarea id="strengths" class="template-input" placeholder="<3-5 keywords of combat/magic strengths>" rows="2"></textarea>
 
+    <!-- MADE OPTIONAL: Weaknesses -->
     <label class="template-label" for="weaknesses">Weaknesses: <span class="optional">(Optional)</span></label>
     <textarea id="weaknesses" class="template-input" placeholder="<3-5 keywords of combat/magic weaknesses>" rows="2"></textarea>
 
-    <!-- **ARDOUR CONNECTION DROPDOWN (SELECT)** -->
+    <!-- **ARDOUR CONNECTION DROPDOWN (SELECT) - UPDATED** -->
     <label class="template-label" for="ardourConnection">Ardour Connection:</label>
-    <select id="ardourConnection" class="template-input">
+    <select id="ardourConnection" class="template-input" required>
         <option value="">-- Select Ardour Level --</option>
         <option value="Novice">Novice</option>
         <option value="Adept">Adept</option>
         <option value="Master">Master</option>
         <option value="Archmage">Archmage</option>
+        <option value="Ardour-Weak">Ardour-Weak</option>
+        <option value="Ardour-Absent">Ardour-Absent</option>
     </select>
 
-    <label class="template-label" for="knownPrinciples">Known Principles: </label>
-    <textarea id="knownPrinciples" class="template-input" placeholder="<List of known magic principles with mastery level>" rows="2"></textarea>
+    <div id="magic-details">
+        <label class="template-label" for="knownPrinciples">Known Principles: <span class="optional">(Optional)</span></label>
+        <textarea id="knownPrinciples" class="template-input" placeholder="<List of known magic principles with mastery level>" rows="2"></textarea>
 
-    <!-- **CASTING STYLE DROPDOWN (SELECT)** -->
-    <label class="template-label" for="castingStyle">Casting Style:</label>
-    <select id="castingStyle" class="template-input">
-        <option value="">-- Select Casting Style --</option>
-        <option value="Academic">Academic</option>
-        <option value="Primal">Primal</option>
-        <option value="Instinctive">Instinctive</option>
-        <option value="Survival">Survival</option>
-        <option value="Scientific">Scientific</option>
-    </select>
+        <!-- **CASTING STYLE DROPDOWN (SELECT)** -->
+        <label class="template-label" for="castingStyle">Casting Style:</label>
+        <select id="castingStyle" class="template-input" required>
+            <option value="">-- Select Casting Style --</option>
+            <option value="Academic">Academic</option>
+            <option value="Primal">Primal</option>
+            <option value="Instinctive">Instinctive</option>
+            <option value="Survival">Survival</option>
+            <option value="Scientific">Scientific</option>
+        </select>
 
-    <!-- **STRAIN TOLERANCE DROPDOWN (SELECT)** -->
-    <label class="template-label" for="strainTolerance">Strain Tolerance:</label>
-    <select id="strainTolerance" class="template-input">
-        <option value="">-- Select Strain Tolerance --</option>
-        <option value="Low">Low</option>
-        <option value="Moderate">Moderate</option>
-        <option value="High">High</option>
-    </select>
+        <!-- **STRAIN TOLERANCE DROPDOWN (SELECT)** -->
+        <label class="template-label" for="strainTolerance">Strain Tolerance:</label>
+        <select id="strainTolerance" class="template-input" required>
+            <option value="">-- Select Strain Tolerance --</option>
+            <option value="Low">Low</option>
+            <option value="Moderate">Moderate</option>
+            <option value="High">High</option>
+        </select>
 
-    <label class="template-label" for="limitations">Limitations: <span class="optional">(Optional)</span></label>
-    <textarea id="limitations" class="template-input" placeholder="<Racial or personal restrictions>" rows="2"></textarea>
+        <label class="template-label" for="limitations">Limitations: <span class="optional">(Optional)</span></label>
+        <textarea id="limitations" class="template-input" placeholder="<Racial or personal restrictions>" rows="2"></textarea>
+    </div>
 
 
     <div class="template-header">Backstory</div>
-    <!-- TYPO FIX: Backstory (Optional) -->
+    
     <label class="template-label" for="backstory">Backstory: <span class="optional">(Optional)</span></label>
     <textarea id="backstory" class="template-input" rows="4" placeholder="<Key chronological events, crucial past relationships, how culture influenced them, etc. (Keep this section for your own detailed notes)>"></textarea>
 
-    <label class="template-label" for="faction">Faction Affiliations: <span class="optional">(Optional)</span></label>
+    <label class="template-label" for="faction">Faction Affiliations: <span class="optional">(Optional)</span> <a href="https://janitorai.com/scripts/8a563b4e-aebb-40fb-80a6-0e84452158b5" target="_blank">(View Factions)</a></label>
     <textarea id="faction" class="template-input" placeholder="<Any connection to major groups: Arcane Assembly, Covenant of Scales, etc.>" rows="2"></textarea>
 
     <label class="template-label" for="notes">Notes/Secrets: <span class="optional">(Optional)</span></label>
@@ -333,6 +379,8 @@
 
 
     <button id="generateButton">Seal the Codex</button>
+
+    <div id="errorMessage"></div>
 
     <!-- OUTPUT BOX - Click to Copy -->
     <div id="outputBox">
@@ -351,83 +399,214 @@
         // Otherwise, return the formatted line with a newline character
         return `${label}: ${value}\n`;
     };
+    
+    // --- CUSTOM MUSIC TOGGLE ---
+    function toggleMusic() {
+        const music = document.getElementById('bgMusic');
+        const btn = document.getElementById('musicButton');
+        
+        if (music.paused) {
+            music.play();
+            btn.innerHTML = '<span>❚❚ Pause Ambient Theme</span>';
+            btn.style.borderColor = '#c39f5f';
+            btn.style.backgroundColor = '#354a5f';
+        } else {
+            music.pause();
+            btn.innerHTML = '<span>▶ Play Ambient Theme</span>';
+            btn.style.backgroundColor = '#253341';
+        }
+    }
 
-    // The core function to build the final character template text
+    // --- DYNAMIC SUB-RACE LOGIC ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const raceSelect = document.getElementById('race');
+        const subRaceContainer = document.getElementById('subRaceContainer');
+        const subRaceInput = document.getElementById('subRace');
+
+        const ardourSelect = document.getElementById('ardourConnection');
+        const magicDetails = document.getElementById('magic-details');
+        const castingStyleSelect = document.getElementById('castingStyle');
+        const strainToleranceSelect = document.getElementById('strainTolerance');
+
+        const subRaceHandler = () => {
+            const selectedRace = raceSelect.value;
+            // Races that require a sub-race detail
+            const requiresSubRace = ["Vampire", "Demi-Human"]; 
+
+            if (requiresSubRace.includes(selectedRace)) {
+                subRaceContainer.style.display = 'block';
+                subRaceInput.setAttribute('required', 'required');
+                
+                // Update placeholder/label based on race
+                const label = subRaceContainer.querySelector('label');
+                if (selectedRace === "Vampire") {
+                    label.innerText = "Vampiric Heritage (Required):";
+                    subRaceInput.placeholder = "e.g., Human Vampire, Orc Vampire, etc.";
+                } else if (selectedRace === "Demi-Human") {
+                    label.innerText = "Beastfolk Type (Required):";
+                    subRaceInput.placeholder = "e.g., Lion, Wolf, Bear, Fox, etc.";
+                }
+            } else {
+                subRaceContainer.style.display = 'none';
+                subRaceInput.removeAttribute('required');
+                subRaceInput.value = ''; // Clear value if hidden
+            }
+        };
+
+        const ardourHandler = () => {
+            const ardourLevel = ardourSelect.value;
+            if (ardourLevel === "Ardour-Absent") {
+                magicDetails.style.display = 'none';
+                castingStyleSelect.removeAttribute('required');
+                strainToleranceSelect.removeAttribute('required');
+                // Optional: Clear values for hidden fields to prevent accidental output
+                castingStyleSelect.value = '';
+                strainToleranceSelect.value = '';
+            } else {
+                magicDetails.style.display = 'block';
+                // Only re-add 'required' if a non-placeholder value is selected
+                if (ardourLevel !== "") {
+                    castingStyleSelect.setAttribute('required', 'required');
+                    strainToleranceSelect.setAttribute('required', 'required');
+                }
+            }
+        };
+
+        // Attach handlers to change events
+        raceSelect.addEventListener('change', subRaceHandler);
+        ardourSelect.addEventListener('change', ardourHandler);
+
+        // Initial run to set up based on defaults
+        subRaceHandler();
+        ardourHandler();
+    });
+
+    // Array of required field IDs and their descriptive names for validation
+    const REQUIRED_FIELDS = [
+        { id: 'charName', label: 'Name' },
+        { id: 'gender', label: 'Gender' },
+        { id: 'race', label: 'Race' },
+        { id: 'deity', label: 'Primary Deity' },
+        { id: 'occupation', label: 'Occupation' },
+        { id: 'nation', label: 'Nation' },
+        { id: 'description', label: 'Physical Description' },
+        { id: 'combatStyle', label: 'Combat Style' },
+        { id: 'ardourConnection', label: 'Ardour Connection' },
+    ];
+
     document.getElementById('generateButton').onclick = function() {
         const outputBox = document.getElementById('outputBox');
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.style.display = 'none';
+        errorMessage.innerText = '';
+        outputBox.style.display = 'none';
 
-        // Fetch all values based on new structure
+        const ardourLevel = getVal('ardourConnection');
+        const selectedRace = getVal('race');
+        let missingFields = [];
+
+        // --- VALIDATION CHECK ---
+        for (const field of REQUIRED_FIELDS) {
+            const inputElement = document.getElementById(field.id);
+            const value = inputElement.value.trim();
+
+            if (!value || value.startsWith('-- Select')) {
+                missingFields.push(field.label);
+            }
+        }
+        
+        // Conditional Sub-Race Validation
+        const subRaceInput = document.getElementById('subRace');
+        if (subRaceInput.hasAttribute('required') && !getVal('subRace')) {
+             missingFields.push(subRaceInput.previousElementSibling.innerText.replace(':', '').replace('(Required)', '').trim());
+        }
+
+
+        // Conditional Magic Detail Validation (if not Ardour-Absent)
+        if (ardourLevel !== "Ardour-Absent") {
+            const castingStyleElement = document.getElementById('castingStyle');
+            const strainToleranceElement = document.getElementById('strainTolerance');
+
+            if (!castingStyleElement.value || castingStyleElement.value.startsWith('-- Select')) {
+                missingFields.push('Casting Style');
+            }
+            if (!strainToleranceElement.value || strainToleranceElement.value.startsWith('-- Select')) {
+                missingFields.push('Strain Tolerance');
+            }
+        }
+
+        if (missingFields.length > 0) {
+            errorMessage.innerText = `Please fill out all required fields before sealing the Codex: ${missingFields.join(', ')}.`;
+            errorMessage.style.display = 'block';
+            return; // STOP execution if required fields are missing
+        }
+
+        // Fetch all values, including conditional subRace
+        const subRaceValue = getVal('subRace');
+        
         const values = {
             charName: getVal('charName'),
-            alias: getVal('alias'), // NEW
+            alias: getVal('alias'), 
             gender: getVal('gender'),
             age: getVal('age'),
-            race: getVal('race'), // NOW FROM SELECT
-            deity: getVal('deity'), // NOW FROM SELECT
+            race: selectedRace + (subRaceValue ? ` (${subRaceValue})` : ''), // COMBINE RACE + SUBRACE
+            deity: getVal('deity'), 
             occupation: getVal('occupation'),
-            title: getVal('title'), // NEW
-            nation: getVal('nation'), // NOW FROM SELECT
+            title: getVal('title'), 
+            nation: getVal('nation'), 
             description: getVal('description'), 
 
-            // COMBAT & MAGIC
             combatStyle: getVal('combatStyle'), 
             strengths: getVal('strengths'),
             weaknesses: getVal('weaknesses'),
-            ardourConnection: getVal('ardourConnection'), // NOW FROM SELECT
+            ardourConnection: ardourLevel, 
             knownPrinciples: getVal('knownPrinciples'),
-            castingStyle: getVal('castingStyle'), // NOW FROM SELECT
-            strainTolerance: getVal('strainTolerance'), // NOW FROM SELECT
+            castingStyle: getVal('castingStyle'), 
+            strainTolerance: getVal('strainTolerance'), 
             limitations: getVal('limitations'),
             
-            // LORE HOOKS
             backstory: getVal('backstory'),
             faction: getVal('faction'),
             notes: getVal('notes')
         };
         
-        // --- TEMPLATE CONSTRUCTION ---
+        // --- TEMPLATE CONSTRUCTION (Order is fixed) ---
         let generatedText = '';
         
         // --- IDENTITY & ORIGIN ---
-        generatedText += buildLine("Name", values.charName || "{{char}}");
-        generatedText += buildLine("Alias", values.alias); // NEW (Optional)
-        generatedText += buildLine("Gender", values.gender || "<Gender>");
-        generatedText += buildLine("Age", values.age || "<Age> (Note racial lifespan context)");
-        // Race logic: If "-- Select Race --" is picked (value=""), use placeholder
-        generatedText += buildLine("Race", values.race || "<Race>"); 
-        // Deity logic: If "-- Select Deity --" is picked (value=""), use placeholder
-        generatedText += buildLine("Primary Deity", values.deity || "<Which deity/pantheon they follow, if any>"); 
-        generatedText += buildLine("Occupation", values.occupation || "<Occupation>");
-        generatedText += buildLine("Title", values.title); // NEW (Optional)
-        // Nation logic: If "-- Select Nation/Region --" is picked (value=""), use placeholder
-        generatedText += buildLine("Nation", values.nation || "<Where they're from and current location>");
+        generatedText += buildLine("Name", values.charName);
+        generatedText += buildLine("Alias", values.alias); 
+        generatedText += buildLine("Gender", values.gender);
+        generatedText += buildLine("Age", values.age); 
+        generatedText += buildLine("Race", values.race); // COMBINED OUTPUT HERE
+        generatedText += buildLine("Primary Deity", values.deity); 
+        generatedText += buildLine("Occupation", values.occupation);
+        generatedText += buildLine("Title", values.title); 
+        generatedText += buildLine("Nation", values.nation);
         
         generatedText += "\nAPPEARANCE\n";
-        generatedText += buildLine("Physical Description", values.description || "<Concise physical description>");
+        generatedText += buildLine("Physical Description", values.description);
 
         // --- BACKSTORY ---
         if (values.backstory) {
             generatedText += "\nBACKSTORY (OPTIONAL)\n";
             generatedText += values.backstory + "\n";
-        } else {
-            // Include placeholders if empty to encourage completion
-            generatedText += "\nBACKSTORY (OPTIONAL)\n";
-            generatedText += "<Key chronological events that shaped them>\n<Crucial past relationships or incidents>\n<How their past informs their present behaviour/outlook>\n";
         }
         
         // --- COMBAT & MAGIC (Unified Section) ---
         generatedText += "\nCOMBAT & MAGIC\n";
-        generatedText += buildLine("Combat Style", values.combatStyle || "<Weapon/magic approach>");
-        generatedText += buildLine("Strengths", values.strengths || "<3-5 keywords>");
-        generatedText += buildLine("Weaknesses", values.weaknesses || "<3-5 keywords>");
-        // Ardour logic: If "-- Select Ardour Level --" is picked (value=""), use placeholder
-        generatedText += buildLine("Ardour Connection", values.ardourConnection || "<Level of Ardour Connection>");
-        generatedText += buildLine("Known Principles", values.knownPrinciples);
-        // Casting logic: If "-- Select Casting Style --" is picked (value=""), use placeholder
-        generatedText += buildLine("Casting Style", values.castingStyle || "<How they manifest magic>");
-        // Strain logic: If "-- Select Strain Tolerance --" is picked (value=""), use placeholder
-        generatedText += buildLine("Strain Tolerance", values.strainTolerance || "<Low/Moderate/High>");
-        generatedText += buildLine("Limitations", values.limitations);
+        generatedText += buildLine("Combat Style", values.combatStyle);
+        generatedText += buildLine("Strengths", values.strengths); 
+        generatedText += buildLine("Weaknesses", values.weaknesses); 
+        generatedText += buildLine("Ardour Connection", values.ardourConnection);
+        
+        // --- CONDITIONAL MAGIC DETAILS ---
+        if (values.ardourConnection !== "Ardour-Absent") {
+            generatedText += buildLine("Known Principles", values.knownPrinciples); 
+            generatedText += buildLine("Casting Style", values.castingStyle); 
+            generatedText += buildLine("Strain Tolerance", values.strainTolerance); 
+            generatedText += buildLine("Limitations", values.limitations); 
+        }
 
         // --- FACTION & NOTES ---
         if (values.faction) {
@@ -459,7 +638,8 @@
             setTimeout(() => { this.innerText = originalText; }, 1500);
         }).catch(err => {
             console.error('Could not copy text: ', err);
-            alert("Copy failed. Please manually select the text in the box and copy.");
+            // Fallback for environments where clipboard API is restricted
+            prompt("Copy failed. Please copy the text below:", textToCopy);
         });
     };
 </script>
